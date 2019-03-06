@@ -4,10 +4,18 @@ extern "C" bool mkdirs(const char* path);
 extern "C" bool write_file(const char* filename, const char* buf, unsigned long buf_len);
 extern "C" void log_error(const char* msg);
 
+
+#ifdef WIN32
 #define LOG_E(fmt,...) \
-		char buf[512];\
-        sprintf(buf,fmt,__VA_ARGS__);\
-        log_error(buf);
+			char buf[512];\
+			sprintf(buf,fmt,__VA_ARGS__);\
+			log_error(buf);
+#else
+#define LOG_E(fmt,...) \
+			char buf[512];\
+			sprintf(buf,fmt,##__VA_ARGS__);\
+			log_error(buf);
+#endif
 
 //// -- others 
 struct Transform
@@ -53,14 +61,12 @@ bool write_tileset(
 	const char* filename, const char* full_path
 	) ;
 
-double degree2rad(double val);
-
-double lati_to_meter(double diff);
-
-double longti_to_meter(double diff, double lati);
-
-double meter_to_lati (double m);
-
-double meter_to_longti(double m, double lati);
+extern "C" {
+	double degree2rad(double val);
+	double lati_to_meter(double diff);
+	double longti_to_meter(double diff, double lati);
+	double meter_to_lati(double m);
+	double meter_to_longti(double m, double lati);
+}
 
 ////////////////////////

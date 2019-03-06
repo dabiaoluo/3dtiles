@@ -12,8 +12,8 @@
 ///////////////////////
 static const double pi = std::acos(-1);
 
-extern "C" bool epsg_convert(int insrs, double* val) {
-    CPLSetConfigOption("GDAL_DATA", "gdal_data");
+extern "C" bool epsg_convert(int insrs, double* val, char* path) {
+    CPLSetConfigOption("GDAL_DATA", path);
     OGRSpatialReference inRs,outRs;
     inRs.importFromEPSG(insrs);
     outRs.importFromEPSG(4326);
@@ -28,25 +28,28 @@ extern "C" bool epsg_convert(int insrs, double* val) {
     return false;
 } 
 
-double degree2rad(double val) {
-    return val * pi / 180.0;
+extern "C"
+{
+	double degree2rad(double val) {
+		return val * pi / 180.0;
+	}
+	double lati_to_meter(double diff) {
+		return diff / 0.000000157891;
+	}
+
+	double longti_to_meter(double diff, double lati) {
+		return diff / 0.000000156785 * std::cos(lati);
+	}
+
+	double meter_to_lati(double m) {
+		return m * 0.000000157891;
+	}
+
+	double meter_to_longti(double m, double lati) {
+		return m * 0.000000156785 / std::cos(lati);
+	}
 }
 
-double lati_to_meter(double diff) {
-    return diff / 0.000000157891;
-}
-
-double longti_to_meter(double diff, double lati) {
-    return diff / 0.000000156785 * std::cos(lati);
-}
-
-double meter_to_lati (double m) {
-    return m * 0.000000157891;
-}
-
-double meter_to_longti(double m, double lati) {
-    return m * 0.000000156785 / std::cos(lati);
-}
 
 std::vector<double> transfrom_xyz(double radian_x, double radian_y, double height_min){
     double ellipsod_a = 40680631590769;

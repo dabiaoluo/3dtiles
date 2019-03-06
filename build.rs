@@ -11,11 +11,14 @@ fn build_win_msvc() {
         .flag("-INCREMENTAL")
         .warnings(false)
         .define("WIN32", None)
+        .define("_WINDOWS",None)
         .include("./src")
         .include("./src/osg")
         .file("./src/tileset.cpp")
         .file("./src/shp23dtile.cpp")
         .file("./src/osgb23dtile.cpp")
+        .file("./src/dxt_img.cpp")
+        .file("./src/make_gltf.cpp")
         .compile("3dtile");
     // -------------
     println!("cargo:rustc-link-search=native=./lib");
@@ -24,6 +27,7 @@ fn build_win_msvc() {
     println!("cargo:rustc-link-lib=osg");
     println!("cargo:rustc-link-lib=osgDB");
     println!("cargo:rustc-link-lib=osgUtil");
+    println!("cargo:rustc-link-lib=osgViewer");
 
     Command::new("cmd")
         .args(
@@ -45,6 +49,8 @@ fn build_win_gun() {
         .file("./src/tileset.cpp")
         .file("./src/shp23dtile.cpp")
         .file("./src/osgb23dtile.cpp")
+        .file("./src/dxt_img.cpp")
+        .file("./src/make_gltf.cpp")
         .compile("3dtile");
     // -------------
     println!("cargo:rustc-link-search=native=./lib");
@@ -74,6 +80,8 @@ fn build_linux_unkonw() {
         .file("./src/tileset.cpp")
         .file("./src/shp23dtile.cpp")
         .file("./src/osgb23dtile.cpp")
+        .file("./src/dxt_img.cpp")
+        .file("./src/make_gltf.cpp")
         .compile("3dtile");
     // -------------
     println!("cargo:rustc-link-search=native=./lib");
